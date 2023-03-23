@@ -1,6 +1,6 @@
 use std::path::Path;
 
-use sdl2::{video::{Window, WindowContext}, render::{Canvas, Texture, TextureCreator, TextureQuery}, pixels::Color, rect::Rect, ttf::{Font, Sdl2TtfContext}, EventPump, keyboard::Scancode};
+use sdl2::{video::{Window, WindowContext}, render::{Canvas, Texture, TextureCreator, TextureQuery}, pixels::Color, rect::Rect, ttf::{Font, Sdl2TtfContext}, EventPump, keyboard::Scancode, mixer::{Chunk, Music}};
 use sdl2::image::LoadTexture;
 
 use crate::game_screen::player_type::PlayerType;
@@ -41,11 +41,17 @@ pub struct TitleScreen<'a> {
 
     // ゲーム画面に遷移しているときの状態
     going_to_game_screen_state: i32,
+
+    // ゲーム開始ジングル
+    start_game_sound: Option<Chunk>,
+
+    // BGM
+    bgm_music: Option<Music<'a>>,
 }
 
 impl TitleScreen<'_> {
     pub fn new<'a>(texture_creator: &'a TextureCreator<WindowContext>, ttf_context: &'a Sdl2TtfContext) -> TitleScreen<'a> {
-        TitleScreen {
+        let screen = TitleScreen {
             logo_image: texture_creator.load_texture(Path::new("res/image/logo.png")).unwrap(),
             cursor_image: texture_creator.load_texture(Path::new("res/image/pipo-charachip018b.png")).unwrap(),
             font16: ttf_context.load_font(Path::new("res/font/m12.ttf"), 16).unwrap(),
@@ -53,7 +59,19 @@ impl TitleScreen<'_> {
             cursor: 0,
             previous_move: 0,
             going_to_game_screen_state: -1,
+            start_game_sound: Chunk::from_file(Path::new("res/sound/start_game.mp3")).ok(),
+            bgm_music: Music::from_file(Path::new("res/sound/title_bgm.mp3")).ok(),
+        };
+
+        // BGMの再生
+        if let Some(music) = &screen.bgm_music {
+            sdl2::mixer::Music::set_volume(128);
+            if let Err(error) = music.play(1) {
+                println!("Failed to play BGM: {}", error);
+            }
         }
+
+        screen
     }
 
     fn draw_text(&self, canvas: &mut Canvas<Window>, x: i32, y: i32, text: &str, color: Color) {
@@ -163,6 +181,14 @@ impl Screen for TitleScreen<'_> {
 
             // 決定キー
             if keyboard_state.is_scancode_pressed(Scancode::Space) || keyboard_state.is_scancode_pressed(Scancode::Num1) || keyboard_state.is_scancode_pressed(Scancode::Slash) {
+                // BGM停止
+                sdl2::mixer::Music::halt();
+                // ジングル再生
+                if let Some(chunk) = &self.start_game_sound {
+                    if let Err(error) = sdl2::mixer::Channel::all().play(chunk, 1) {
+                        println!("Failed to play chunk: {}", error);
+                    }
+                }
                 // ゲーム画面への画面遷移を開始する
                 self.going_to_game_screen_state = 0;
             }
