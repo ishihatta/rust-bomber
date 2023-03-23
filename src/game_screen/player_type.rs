@@ -1,7 +1,7 @@
 use crate::ai::ai_player::{AIPlayer, AIPlayerAdditionalInfo};
-use crate::game_screen::GameScreen;
-use crate::player_operation::PlayerOperation;
-use crate::human_operation::HumanOperation;
+use super::screen::GameScreen;
+use super::player_operation::PlayerOperation;
+use super::human_operation::HumanOperation;
 
 #[derive(Copy, Clone)]
 pub enum PlayerType {

@@ -3,7 +3,7 @@ extern crate rand;
 use sdl2::{video::Window, render::{Canvas, Texture}, rect::Rect};
 use rand::Rng;
 
-use crate::{light_sprite::LightSprite, light_sprite::LightSpriteEvent};
+use super::{light_sprite::LightSprite, light_sprite::LightSpriteEvent};
 
 const TIME_TO_MELT: i32 = 30;
 

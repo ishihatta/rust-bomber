@@ -1,25 +1,17 @@
 extern crate sdl2;
 
 use sdl2::event::Event;
-use sdl2::keyboard::Keycode;
 use sdl2::gfx::framerate::FPSManager;
 use sdl2::mixer::{InitFlag, AUDIO_S16LSB, DEFAULT_CHANNELS};
+use title_screen::screen::TitleScreen;
 
+mod screen;
 mod game_screen;
-mod bomb;
-mod constants;
-mod explosion;
-mod light_sprite;
-mod player;
-mod player_input;
-mod power_up_item;
-mod wall;
-mod player_type;
-mod player_operation;
-mod human_operation;
+mod title_screen;
 mod ai;
 
-use crate::game_screen::GameScreen;
+use crate::screen::{Screen, ScreenEvent};
+use crate::game_screen::screen::GameScreen;
 
 pub fn main() -> Result<(), String> {
     let sdl_context = sdl2::init()?;
@@ -53,19 +45,27 @@ pub fn main() -> Result<(), String> {
 
     let mut event_pump = sdl_context.event_pump()?;
 
-    let mut game_screen = GameScreen::new(&texture_creator, &ttf_context);
-    game_screen.start_game();
+    let mut screen: Box<dyn Screen> = Box::new(TitleScreen::new(&texture_creator, &ttf_context));
 
     'running: loop {
         for event in event_pump.poll_iter() {
             match event {
-                Event::Quit { .. } | Event::KeyDown { keycode: Some(Keycode::Escape), .. } => break 'running,
+                Event::Quit { .. } => break 'running,
                 _ => {}
             }
         }
+
         // The rest of the game loop goes here...
-        game_screen.draw(&mut canvas);
-        game_screen.on_next_frame(&event_pump);
+        screen.draw(&mut canvas);
+        match screen.on_next_frame(&event_pump) {
+            ScreenEvent::None => (),
+            ScreenEvent::GoToGameScreen(player_type1, player_type2) => {
+                screen = Box::new(GameScreen::new(&texture_creator, &ttf_context, player_type1, player_type2));
+            }
+            ScreenEvent::ReturnToTitleScreen => {
+                screen = Box::new(TitleScreen::new(&texture_creator, &ttf_context));
+            }
+        }
 
         fps_manager.delay();
     }
