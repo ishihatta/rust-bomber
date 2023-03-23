@@ -1,9 +1,9 @@
 use super::ai_constants;
 use super::field_element::FieldElement;
 use super::field_element::FieldObject;
-use crate::game_screen::{bomb::Bomb, constants, game_screen, game_screen::GameScreen, light_sprite::LightSprite};
+use crate::game_screen::{bomb::Bomb, constants, screen, screen::GameScreen, light_sprite::LightSprite};
 
-pub const ELEMENT_SIZE: usize = (game_screen::MAP_WIDTH * game_screen::MAP_HEIGHT) as usize;
+pub const ELEMENT_SIZE: usize = (screen::MAP_WIDTH * screen::MAP_HEIGHT) as usize;
 
 #[derive(Copy, Clone)]
 pub struct Field {
@@ -15,8 +15,8 @@ impl Field {
         let e = FieldElement::new(0, 0, FieldObject::None);
         let mut field = Field { elements: [e; ELEMENT_SIZE] };
         for i in 0..ELEMENT_SIZE {
-            field.elements[i].x = i as i32 % game_screen::MAP_WIDTH;
-            field.elements[i].y = i as i32 / game_screen::MAP_WIDTH;
+            field.elements[i].x = i as i32 % screen::MAP_WIDTH;
+            field.elements[i].y = i as i32 / screen::MAP_WIDTH;
         }
         field
     }
@@ -57,11 +57,11 @@ impl Field {
     }
 
     pub fn get_element(&self, x: i32, y: i32) -> &FieldElement {
-        self.elements.get((y * game_screen::MAP_WIDTH + x) as usize).unwrap()
+        self.elements.get((y * screen::MAP_WIDTH + x) as usize).unwrap()
     }
 
     pub fn get_element_mut(&mut self, x: i32, y: i32) -> &mut FieldElement {
-        self.elements.get_mut((y * game_screen::MAP_WIDTH + x) as usize).unwrap()
+        self.elements.get_mut((y * screen::MAP_WIDTH + x) as usize).unwrap()
     }
 
     /// 指定位置からリスクのない場所へ移動できるか確認する
@@ -69,7 +69,7 @@ impl Field {
         let mut checked = [false; ELEMENT_SIZE];
         let mut search_queue = Vec::<&FieldElement>::new();
         search_queue.push(self.get_element(x, y));
-        checked[(x + y * game_screen::MAP_WIDTH) as usize] = true;
+        checked[(x + y * screen::MAP_WIDTH) as usize] = true;
         while !search_queue.is_empty() {
             let element = search_queue.remove(0);
             let ex = element.x;
@@ -81,7 +81,7 @@ impl Field {
                 self.get_element(ex, ey + 1),
             ];
             for next_element in next_elements {
-                let idx = (next_element.x + next_element.y * game_screen::MAP_WIDTH) as usize;
+                let idx = (next_element.x + next_element.y * screen::MAP_WIDTH) as usize;
                 if !checked[idx] && next_element.is_passable() {
                     if next_element.x != opponent_x || next_element.y != opponent_y {
                         if next_element.risk == 0 {

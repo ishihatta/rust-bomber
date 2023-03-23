@@ -4,7 +4,7 @@ use crate::game_screen::{
     constants,
     bomb::Bomb,
     player_input::{PlayerInput, Movement},
-    game_screen::{self, GameScreen},
+    screen::{self, GameScreen},
     light_sprite::LightSprite, player_operation::PlayerOperation,
 };
 
@@ -242,7 +242,7 @@ impl AIPlayer {
         let mut checked = [false; ELEMENT_SIZE];
         let mut search_queue = Vec::<&FieldElement>::new();
         search_queue.push(field.get_element(opponent_x, opponent_y));
-        checked[(opponent_x + opponent_y * game_screen::MAP_WIDTH) as usize] = true;
+        checked[(opponent_x + opponent_y * screen::MAP_WIDTH) as usize] = true;
         // 移動可能な範囲
         let mut movable_space = 0;
         // 危険な範囲
@@ -262,7 +262,7 @@ impl AIPlayer {
                 field.get_element(ex, ey + 1),
             ];
             for next_element in next_elements {
-                let idx = (next_element.x + next_element.y * game_screen::MAP_WIDTH) as usize;
+                let idx = (next_element.x + next_element.y * screen::MAP_WIDTH) as usize;
                 let distance = (opponent_x - next_element.x).abs() + (opponent_y - next_element.y).abs();
                 if distance <= 5 && !checked[idx] && next_element.is_passable() {
                     search_queue.push(next_element);

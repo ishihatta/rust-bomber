@@ -1,5 +1,5 @@
 use crate::ai::ai_player::{AIPlayer, AIPlayerAdditionalInfo};
-use super::game_screen::GameScreen;
+use super::screen::GameScreen;
 use super::player_operation::PlayerOperation;
 use super::human_operation::HumanOperation;
 

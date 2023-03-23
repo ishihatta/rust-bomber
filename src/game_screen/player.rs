@@ -6,7 +6,7 @@ use sdl2::video::Window;
 
 use crate::ai::ai_player::AIPlayerAdditionalInfo;
 use super::light_sprite::{LightSprite, LightSpriteEvent};
-use super::game_screen::GameScreen;
+use super::screen::GameScreen;
 use super::player_input::PlayerInput;
 use super::player_operation::PlayerOperation;
 use super::player_type::PlayerType;

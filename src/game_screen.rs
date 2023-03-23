@@ -1,7 +1,7 @@
 pub mod bomb;
 pub mod constants;
 pub mod explosion;
-pub mod game_screen;
+pub mod screen;
 pub mod human_operation;
 pub mod light_sprite;
 pub mod player_input;
