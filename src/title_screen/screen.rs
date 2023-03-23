@@ -38,6 +38,9 @@ pub struct TitleScreen<'a> {
 
     // 前フレームでのカーソルの移動
     previous_move: i32,
+
+    // ゲーム画面に遷移しているときの状態
+    going_to_game_screen_state: i32,
 }
 
 impl TitleScreen<'_> {
@@ -49,6 +52,7 @@ impl TitleScreen<'_> {
             texture_creator,
             cursor: 0,
             previous_move: 0,
+            going_to_game_screen_state: -1,
         }
     }
 
@@ -91,7 +95,11 @@ impl Screen for TitleScreen<'_> {
         for i in 0..MENU_ITEMS.len() {
             let y = MENU_ITEM_Y_START + MENU_ITEM_Y_STEP * i as i32;
             let color = if i == self.cursor {
-                Color::RGB(255, 160, 160)
+                if self.going_to_game_screen_state >= 0 && self.going_to_game_screen_state % 12 < 6 {
+                    Color::RGB(160, 160, 160)
+                } else {
+                    Color::RGB(255, 160, 160)
+                }
             } else {
                 Color::RGB(160, 160, 160)
             };
@@ -107,10 +115,29 @@ impl Screen for TitleScreen<'_> {
             println!("Failed to copy texture {}", error);
         }
 
+        // フェードアウト
+        if self.going_to_game_screen_state > 135 {
+            canvas.set_blend_mode(sdl2::render::BlendMode::Blend);
+            canvas.set_draw_color(Color::RGBA(0, 0, 0, (255 * (self.going_to_game_screen_state - 135) / 15) as u8));
+            if let Err(error) = canvas.fill_rect(Rect::new(0, 0, 800, 480)) {
+                println!("Failed to fill rect: {}", error);
+            }
+        }
+
         canvas.present();
     }
 
     fn on_next_frame(&mut self, event_pump: &mut EventPump) -> ScreenEvent {
+        // ゲーム画面への遷移中の場合は何もしない
+        if self.going_to_game_screen_state >= 0 {
+            self.going_to_game_screen_state += 1;
+            if self.going_to_game_screen_state >= 150 {
+                let item = &MENU_ITEMS[self.cursor];
+                return ScreenEvent::GoToGameScreen(item.player_type_1, item.player_type_2);
+            }
+            return ScreenEvent::None;
+        }
+
         let keyboard_state = event_pump.keyboard_state();
 
         if keyboard_state.is_scancode_pressed(Scancode::Up) || keyboard_state.is_scancode_pressed(Scancode::W) {
@@ -134,9 +161,10 @@ impl Screen for TitleScreen<'_> {
         } else {
             self.previous_move = 0;
 
+            // 決定キー
             if keyboard_state.is_scancode_pressed(Scancode::Space) || keyboard_state.is_scancode_pressed(Scancode::Num1) || keyboard_state.is_scancode_pressed(Scancode::Slash) {
-                let item = &MENU_ITEMS[self.cursor];
-                return ScreenEvent::GoToGameScreen(item.player_type_1, item.player_type_2);
+                // ゲーム画面への画面遷移を開始する
+                self.going_to_game_screen_state = 0;
             }
         }
 
