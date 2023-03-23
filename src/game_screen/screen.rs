@@ -327,7 +327,7 @@ impl Screen for GameScreen<'_> {
         canvas.present();
     }
 
-    fn on_next_frame(&mut self, event_pump: &mut EventPump) -> ScreenEvent {
+    fn on_next_frame(&mut self, event_pump: &EventPump) -> ScreenEvent {
         // キーボード状態取得
         let keyboard_state = event_pump.keyboard_state();
 

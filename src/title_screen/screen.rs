@@ -127,7 +127,7 @@ impl Screen for TitleScreen<'_> {
         canvas.present();
     }
 
-    fn on_next_frame(&mut self, event_pump: &mut EventPump) -> ScreenEvent {
+    fn on_next_frame(&mut self, event_pump: &EventPump) -> ScreenEvent {
         // ゲーム画面への遷移中の場合は何もしない
         if self.going_to_game_screen_state >= 0 {
             self.going_to_game_screen_state += 1;

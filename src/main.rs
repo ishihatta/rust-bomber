@@ -57,7 +57,7 @@ pub fn main() -> Result<(), String> {
 
         // The rest of the game loop goes here...
         screen.draw(&mut canvas);
-        match screen.on_next_frame(&mut event_pump) {
+        match screen.on_next_frame(&event_pump) {
             ScreenEvent::None => (),
             ScreenEvent::GoToGameScreen(player_type1, player_type2) => {
                 screen = Box::new(GameScreen::new(&texture_creator, &ttf_context, player_type1, player_type2));

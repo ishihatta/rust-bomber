@@ -10,5 +10,5 @@ pub enum ScreenEvent {
 
 pub trait Screen {
     fn draw(&mut self, canvas: &mut Canvas<Window>);
-    fn on_next_frame(&mut self, event_pump: &mut EventPump) -> ScreenEvent;
+    fn on_next_frame(&mut self, event_pump: &EventPump) -> ScreenEvent;
 }
