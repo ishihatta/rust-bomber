@@ -1,6 +1,6 @@
 use sdl2::keyboard::KeyboardState;
 
-use crate::{
+use crate::game_screen::{
     constants,
     bomb::Bomb,
     player_input::{PlayerInput, Movement},

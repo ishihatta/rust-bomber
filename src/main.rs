@@ -6,20 +6,9 @@ use sdl2::gfx::framerate::FPSManager;
 use sdl2::mixer::{InitFlag, AUDIO_S16LSB, DEFAULT_CHANNELS};
 
 mod game_screen;
-mod bomb;
-mod constants;
-mod explosion;
-mod light_sprite;
-mod player;
-mod player_input;
-mod power_up_item;
-mod wall;
-mod player_type;
-mod player_operation;
-mod human_operation;
 mod ai;
 
-use crate::game_screen::GameScreen;
+use crate::game_screen::game_screen::GameScreen;
 
 pub fn main() -> Result<(), String> {
     let sdl_context = sdl2::init()?;

@@ -5,14 +5,14 @@ use sdl2::render::{Canvas, Texture};
 use sdl2::video::Window;
 
 use crate::ai::ai_player::AIPlayerAdditionalInfo;
-use crate::light_sprite::{LightSprite, LightSpriteEvent};
-use crate::game_screen::GameScreen;
-use crate::player_input::PlayerInput;
-use crate::player_operation::PlayerOperation;
-use crate::player_type::PlayerType;
-use crate::wall::Wall;
-use crate::player_input::Movement;
-use crate::bomb::Bomb;
+use super::light_sprite::{LightSprite, LightSpriteEvent};
+use super::game_screen::GameScreen;
+use super::player_input::PlayerInput;
+use super::player_operation::PlayerOperation;
+use super::player_type::PlayerType;
+use super::wall::Wall;
+use super::player_input::Movement;
+use super::bomb::Bomb;
 
 #[derive(Copy, Clone)]
 pub enum Direction {

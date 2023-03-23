@@ -1,8 +1,8 @@
 use sdl2::keyboard::{Scancode, KeyboardState};
 
 use crate::ai::ai_player::AIPlayerAdditionalInfo;
-use crate::player_operation::PlayerOperation;
-use crate::player_input::{PlayerInput, Movement};
+use super::player_operation::PlayerOperation;
+use super::player_input::{PlayerInput, Movement};
 
 struct KeyAssignment {
     left: Scancode,

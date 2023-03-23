@@ -1,11 +1,7 @@
 use super::ai_constants;
 use super::field_element::FieldElement;
 use super::field_element::FieldObject;
-use crate::bomb::Bomb;
-use crate::constants;
-use crate::game_screen;
-use crate::game_screen::GameScreen;
-use crate::light_sprite::LightSprite;
+use crate::game_screen::{bomb::Bomb, constants, game_screen, game_screen::GameScreen, light_sprite::LightSprite};
 
 pub const ELEMENT_SIZE: usize = (game_screen::MAP_WIDTH * game_screen::MAP_HEIGHT) as usize;
 

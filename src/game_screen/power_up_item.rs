@@ -1,6 +1,6 @@
 use sdl2::{video::Window, render::{Canvas, Texture}, rect::Rect};
 
-use crate::{light_sprite::LightSprite, light_sprite::LightSpriteEvent};
+use super::{light_sprite::LightSprite, light_sprite::LightSpriteEvent};
 
 pub struct PowerUpItem {
     x: i32,
