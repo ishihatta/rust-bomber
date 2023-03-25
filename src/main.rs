@@ -1,6 +1,6 @@
 extern crate sdl2;
 
-use sdl2::event::Event;
+use sdl2::event::{Event, WindowEvent};
 use sdl2::gfx::framerate::FPSManager;
 use sdl2::mixer::{InitFlag, AUDIO_S16LSB, DEFAULT_CHANNELS};
 use title_screen::screen::TitleScreen;
@@ -19,8 +19,9 @@ pub fn main() -> Result<(), String> {
     let ttf_context = sdl2::ttf::init().map_err(|e| e.to_string())?;
 
     let window = video_subsystem
-        .window("rust-sdl2 demo: Video", 800, 480)
+        .window("Bomber mates", 800, 480)
         .position_centered()
+        .resizable()
         .opengl()
         .build()
         .map_err(|e| e.to_string())?;
@@ -51,6 +52,14 @@ pub fn main() -> Result<(), String> {
         for event in event_pump.poll_iter() {
             match event {
                 Event::Quit { .. } => break 'running,
+                Event::Window { win_event, .. } => {
+                    if let WindowEvent::Resized(w, h) = win_event {
+                        // ウィンドウサイズが変更された
+                        if let Err(error) = canvas.set_scale(w as f32 / 800f32, h as f32 / 480f32) {
+                            println!("Failed to resize window: {}", error);
+                        }
+                    }
+                }
                 _ => {}
             }
         }
