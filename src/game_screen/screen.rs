@@ -187,7 +187,7 @@ impl GameScreen<'_> {
 
     pub fn play_chunk(chunk: &Option<Chunk>, is_loop: bool) -> Option<Channel> {
         if let Some(sound) = chunk {
-            match sdl2::mixer::Channel::all().play(sound, if is_loop { -1 } else { 1 }) {
+            match sdl2::mixer::Channel::all().play(sound, if is_loop { -1 } else { 0 }) {
                 Ok(channel) => Some(channel),
                 Err(_) => None,
             }

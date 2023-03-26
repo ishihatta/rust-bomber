@@ -21,6 +21,7 @@ const MENU_ITEMS: [MenuItem; 4] = [
 const MENU_ITEM_X: i32 = 300;
 const MENU_ITEM_Y_START: i32 = 260;
 const MENU_ITEM_Y_STEP: i32 = 40;
+const JINGLE_TIME: i32 = 190;
 
 pub struct TitleScreen<'a> {
     // テクスチャ
@@ -134,9 +135,9 @@ impl Screen for TitleScreen<'_> {
         }
 
         // フェードアウト
-        if self.going_to_game_screen_state > 135 {
+        if self.going_to_game_screen_state > JINGLE_TIME - 15 {
             canvas.set_blend_mode(sdl2::render::BlendMode::Blend);
-            canvas.set_draw_color(Color::RGBA(0, 0, 0, (255 * (self.going_to_game_screen_state - 135) / 15) as u8));
+            canvas.set_draw_color(Color::RGBA(0, 0, 0, (255 * (self.going_to_game_screen_state - (JINGLE_TIME - 15)) / 15) as u8));
             if let Err(error) = canvas.fill_rect(Rect::new(0, 0, 800, 480)) {
                 println!("Failed to fill rect: {}", error);
             }
@@ -149,7 +150,7 @@ impl Screen for TitleScreen<'_> {
         // ゲーム画面への遷移中の場合は何もしない
         if self.going_to_game_screen_state >= 0 {
             self.going_to_game_screen_state += 1;
-            if self.going_to_game_screen_state >= 150 {
+            if self.going_to_game_screen_state >= JINGLE_TIME {
                 let item = &MENU_ITEMS[self.cursor];
                 return ScreenEvent::GoToGameScreen(item.player_type_1, item.player_type_2);
             }
@@ -185,7 +186,7 @@ impl Screen for TitleScreen<'_> {
                 sdl2::mixer::Music::halt();
                 // ジングル再生
                 if let Some(chunk) = &self.start_game_sound {
-                    if let Err(error) = sdl2::mixer::Channel::all().play(chunk, 1) {
+                    if let Err(error) = sdl2::mixer::Channel::all().play(chunk, 0) {
                         println!("Failed to play chunk: {}", error);
                     }
                 }
