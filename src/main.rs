@@ -42,7 +42,7 @@ pub fn main() -> Result<(), String> {
         println!("Failure to open audio: {}", e);
     }
     let _mixer_context = sdl2::mixer::init(InitFlag::MP3);
-    sdl2::mixer::allocate_channels(8);
+    sdl2::mixer::allocate_channels(16);
 
     let mut event_pump = sdl_context.event_pump()?;
 
