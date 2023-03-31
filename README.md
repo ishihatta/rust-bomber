@@ -18,12 +18,11 @@ Rust で書いた簡単な対戦2Dアクションゲームです。Windows, MacO
 * [SDL_mixer](https://github.com/libsdl-org/SDL_mixer)
 * [SDL_ttf](https://github.com/libsdl-org/SDL_ttf)
 * [SDL_image](https://github.com/libsdl-org/SDL_image)
-* [SDL2_gfx](https://www.ferzkopp.net/wordpress/2016/01/02/sdl_gfx-sdl2_gfx/)
 
 たとえば Ubuntu では以下のコマンドでこれらのライブラリをインストールできます。
 
 ```sh
-sudo apt install libsdl2-dev libsdl2-mixer-dev libsdl2-ttf-dev libsdl2-image-dev libsdl2-gfx-dev
+sudo apt install libsdl2-dev libsdl2-mixer-dev libsdl2-ttf-dev libsdl2-image-dev
 ```
 
 ## ビルド
