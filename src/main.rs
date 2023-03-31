@@ -84,7 +84,6 @@ pub fn main() -> Result<(), String> {
         if wait_time > 0 {
             std::thread::sleep(std::time::Duration::from_nanos(wait_time as u64));
         }
-        println!("wait_time={}", wait_time);
     }
 
     Ok(())
