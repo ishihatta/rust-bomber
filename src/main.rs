@@ -1,9 +1,9 @@
 extern crate sdl2;
 
 use sdl2::event::{Event, WindowEvent};
-use sdl2::gfx::framerate::FPSManager;
 use sdl2::mixer::{InitFlag, AUDIO_S16LSB, DEFAULT_CHANNELS};
 use title_screen::screen::TitleScreen;
+use chrono::Utc;
 
 mod screen;
 mod game_screen;
@@ -12,6 +12,9 @@ mod ai;
 
 use crate::screen::{Screen, ScreenEvent};
 use crate::game_screen::screen::GameScreen;
+
+const FRAME_RATE: i64 = 60;
+const FRAME_TIME: i64 = 1_000_000_000 / FRAME_RATE;
 
 pub fn main() -> Result<(), String> {
     let sdl_context = sdl2::init()?;
@@ -41,12 +44,11 @@ pub fn main() -> Result<(), String> {
     let _mixer_context = sdl2::mixer::init(InitFlag::MP3);
     sdl2::mixer::allocate_channels(8);
 
-    let mut fps_manager = FPSManager::new();
-    fps_manager.set_framerate(60).map_err(|e| e.to_string())?;
-
     let mut event_pump = sdl_context.event_pump()?;
 
     let mut screen: Box<dyn Screen> = Box::new(TitleScreen::new(&texture_creator, &ttf_context));
+
+    let mut frame_timing = Utc::now().timestamp_nanos();
 
     'running: loop {
         for event in event_pump.poll_iter() {
@@ -76,7 +78,13 @@ pub fn main() -> Result<(), String> {
             }
         }
 
-        fps_manager.delay();
+        // FPS固定でウェイトをかける
+        frame_timing += FRAME_TIME;
+        let wait_time = frame_timing - Utc::now().timestamp_nanos();
+        if wait_time > 0 {
+            std::thread::sleep(std::time::Duration::from_nanos(wait_time as u64));
+        }
+        println!("wait_time={}", wait_time);
     }
 
     Ok(())
